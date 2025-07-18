@@ -23,10 +23,10 @@ echo '
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/PROGRAMA_SEMANA_4/view/usuarios/listaUsuarios.php">Usuarios</a>
+                        <a class="nav-link" href="/PracticaGrupal1/view/usuarios/listaUsuarios.php">Usuarios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/PROGRAMA_SEMANA_4/view/componentes/cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="/PracticaGrupal1/view/componentes/cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>

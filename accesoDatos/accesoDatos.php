@@ -5,7 +5,7 @@ function abrirConexion(){
 
 try{
 
-    $host = "127.0.0.1";
+    $host = "localhost";
     $user = "root";
     $password = "Admin123*";
     $db = "BD_AWCS_IIC25";
@@ -29,7 +29,7 @@ try{
 
 function cerrarConexion($mysqli){
 
-    if($mysqli instanceof myqsli){
+    if($mysqli instanceof mysqli){
         $mysqli->close();
     }
 

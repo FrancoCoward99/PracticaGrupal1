@@ -1,45 +1,51 @@
 <?php
 session_start();
-// echo $_SESSION["nombreUsuario"];
 
-if(!isset($_SESSION["nombreUsuario"])){
-    echo '<script> 
-        alert("Debe iniciar sesión para acceder a esta página.") 
-        window.location.href = "login.php"
-        </script>';
+if (!isset($_SESSION['nombreUsuario']) || !isset($_SESSION['usuarioID'])) {
+    echo '<script>
+        alert("Debe iniciar sesión para acceder a esta página.");
+        window.location.href = "login.php";
+    </script>';
+    exit;
 }
 
+require_once '../accesoDatos/accesoDatos.php';
+$mysqli = abrirConexion();
+
+$usuarioID = $_SESSION['usuarioID']; // ← Usamos ID único del usuario
+
+$sql = "SELECT tarea, descripcion, urlImagen 
+        FROM tareaUsuario 
+        WHERE usuarioID = ?";
+        
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param("i", $usuarioID);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="../scripts/dashboard.js"></script>
-    <title>Dashboard</title>
 </head>
-
 <body>
 
 <?php include 'componentes/navbar.php' ?>
 
 <header class="mb-4">
-  <div class="p-5 text-center bg-image" style="
-    background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-    height: 400px;
-    background-size: cover;
-    background-position: center;
-  ">
+  <div class="p-5 text-center bg-image" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'); height: 400px; background-size: cover; background-position: center;">
     <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 100%;">
       <div class="d-flex justify-content-center align-items-center h-100">
         <div class="text-white">
-          <h1 class="mb-3 fw-bold display-4">Bienvenido, <?php echo $_SESSION["nombreUsuario"] ?> .</h1>
+          <h1 class="mb-3 fw-bold display-4">Bienvenido, <?= $_SESSION["nombreUsuario"] ?>.</h1>
           <h5 class="mb-4">Gestiona tus tareas de manera eficiente y ordenada.</h5>
         </div>
       </div>
@@ -47,17 +53,38 @@ if(!isset($_SESSION["nombreUsuario"])){
   </div>
 </header>
 
-    <div data-aos="flip-up" class="row mt-5 pl-5" id="task-list">
-        <!-- Mostrar los cards -->
+<div class="row mt-5 pl-5" id="task-list">
+    <?php while ($row = $result->fetch_assoc()) { ?>
 
-    </div>
+        <?php 
+            $titulo = $row['tarea'];
+            if (strlen($titulo) > 50) {
+                $titulo = substr($titulo, 0, 50) . '...';
+            }
+        ?>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
 
-  <script>
-  AOS.init();
-</script>
+                <?php 
+                    if (!empty($row['urlImagen'])) {
+                        echo '<img src="' . htmlspecialchars($row['urlImagen']) . '" class="card-img-top" alt="Imagen de la tarea">';
+                    }
+                ?>
 
-</body>
+                <div class="card-body">
+                    <h5 class="card-title"><?php echo htmlspecialchars($titulo); ?></h5>
+                    <p class="card-text"><?php echo htmlspecialchars($row['descripcion']); ?></p>
+                </div>
 
-</html>
+            </div>
+        </div>
+
+    <?php } ?>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init()

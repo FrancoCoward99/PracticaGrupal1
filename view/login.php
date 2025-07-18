@@ -4,116 +4,59 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-/*
-Sem 8
-*/
-
-// $carros = array("Toyota", "Nissan", "Mitsubishi", "Honda", "Chery");
-// $carros2 = array("Subaru", "Changan", "Land Rover");
-
-// $carros23 = array(1, 2, 3, 4, 5);
-
-// $arrayUnificado = array_merge($carros, $carros2, $carros23);
-
-// print_r($carros23);
-
-// // print_r($carros);
-
-// // echo $carros[5];
-
-// array_push($carros, "Mazda");
-// // print_r($carros);
-
-// // $posicion = array_search("Nissan", $carros);
-// // echo $posicion;
-// die;
-
 require_once '../accesoDatos/accesoDatos.php';
 
-try{
+try {
     $mysqli = abrirConexion();
-}catch(Exception $e){
+} catch(Exception $e) {
     die('Error al conectar a la base de datos: ' . $e->getMessage());
 }
 
-// echo "Hola. <br/>";
-
-// $nombre = 'Eduardo';
-
-// if($nombre == 'Eduardo'){
-//     // echo 'Hola Eduardo';
-//      echo '<script> alert("Eduardo bienvenido.")</script>';
-// }
-
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $correoUsuario = $_POST['txtEmail'] ?? '';
     $contrasenna = $_POST['txtPassword'] ?? '';
 
-    echo $correoUsuario;
-    echo $contrasenna;
+    if ($correoUsuario !== '' && $contrasenna !== '') {
 
-    // echo password_hash($contrasenna, PASSWORD_DEFAULT);
+        $sql = "SELECT id, contrasena, nombre FROM usuarios WHERE nombreUsuario = ? LIMIT 1";
 
-    if($correoUsuario !== '' && $contrasenna !== ''){
-
-        $sql = "SELECT contrasena, nombre FROM usuarios WHERE nombreUsuario = ? LIMIT 1";
-
-        if($stmt = $mysqli->prepare($sql)){
+        if ($stmt = $mysqli->prepare($sql)) {
             $stmt->bind_param('s', $correoUsuario);
             $stmt->execute();
             $stmt->store_result();
 
-            if($stmt->num_rows === 1){
-                
-                $stmt->bind_result($contrasennaUsuario, $nombreUsuario);
+            if ($stmt->num_rows === 1) {
+                // OJO: orden correcto del bind_result
+                $stmt->bind_result($idUsuario, $contrasennaUsuario, $nombreUsuario);
                 $stmt->fetch();
-
                 $stmt->close();
                 cerrarConexion($mysqli);
 
-                // echo password_hash($contrasennaUsuario, PASSWORD_DEFAULT);
-                // echo '<br/>';
-
-                // if($contrasenna === $contrasennaUsuario){
-                //     echo 'Login exitoso. Bienvenido: ' . $nombreUsuario;
-                //     // header("Location: dashboard.html");
-                // }else{
-                //     echo 'contrasenna incorrecta.';
-                // }
-                
-                if(password_verify($contrasenna, $contrasennaUsuario)){
-
+                if (password_verify($contrasenna, $contrasennaUsuario)) {
                     session_start();
-
                     $_SESSION["nombreUsuario"] = $nombreUsuario;
-
-                    echo 'Login exitoso. Bienvenido: ' . $nombreUsuario;
-
-                    echo '<script> console.log("Inicio de sesión exitoso.") </script>';
+                    $_SESSION["usuarioID"] = $idUsuario;
 
                     header("Location: dashboard.php");
-
-                }else{
-                    echo 'contrasenna incorrecta.';
+                    exit;
+                } else {
+                    echo 'Contraseña incorrecta.';
                 }
-                
 
-            }else{
-                echo 'El correo indicado no existe.';
+            } else {
+                echo 'El usuario indicado no existe.';
             }
 
         }
 
-    }else{
-        echo 'Ingrese usuario y contrasenna.';
+    } else {
+        echo 'Ingrese usuario y contraseña.';
     }
-
 }
 
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
