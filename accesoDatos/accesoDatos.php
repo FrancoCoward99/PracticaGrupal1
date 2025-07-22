@@ -7,7 +7,7 @@ try{
 
     $host = "localhost";
     $user = "root";
-    $password = "Admin123*";
+    $password = "Guitarra.99";
     $db = "BD_AWCS_IIC25";
 
     $mysqli = new mysqli($host, $user, $password, $db);

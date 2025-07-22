@@ -26,6 +26,10 @@ echo '
                         <a class="nav-link" href="/PracticaGrupal1/view/usuarios/listaUsuarios.php">Usuarios</a>
                     </li>
                     <li class="nav-item">
+  <a class="nav-link" href="/PracticaGrupal1/view/Tareas/listaTareas.php">Tareas</a>
+</li>
+
+                    <li class="nav-item">
                         <a class="nav-link" href="/PracticaGrupal1/view/componentes/cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
