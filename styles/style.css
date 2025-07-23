@@ -1,3 +1,7 @@
 #loginError{
     display: none !important;
 }
+
+  body {
+    background-color: #FAF0E6;
+  }

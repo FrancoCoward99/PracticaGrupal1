@@ -26,7 +26,7 @@ echo '
                         <a class="nav-link" href="/PracticaGrupal1/view/usuarios/listaUsuarios.php">Usuarios</a>
                     </li>
                     <li class="nav-item">
-  <a class="nav-link" href="/PracticaGrupal1/view/Tareas/listaTareas.php">Tareas</a>
+  <a class="nav-link" href="/PracticaGrupal1/view/tareas/listaTareas.php">Lista de Tareas</a>
 </li>
 
                     <li class="nav-item">

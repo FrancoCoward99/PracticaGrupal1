@@ -7,10 +7,16 @@ try{
 
     $host = "localhost";
     $user = "root";
+<<<<<<< HEAD
     $password = "";
     $db = "BD_AWCS_IIC25";
+=======
+    $password = "hola";
+    $db = "bd_awcs_iic25";
+    $port = 3307;
+>>>>>>> María
 
-    $mysqli = new mysqli($host, $user, $password, $db);
+    $mysqli = new mysqli($host, $user, $password, $db, $port);
 
     if($mysqli->connect_error){
         throw new exception("Sucedió un error al realizar la conexión a la base de datos.");
