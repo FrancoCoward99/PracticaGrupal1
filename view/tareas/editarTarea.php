@@ -23,7 +23,7 @@ if (!$id) {
     exit;
 }
 
-// Obtener la tarea actual
+
 $stmt = $mysqli->prepare("SELECT * FROM tareaUsuario WHERE id = ? AND usuarioID = ?");
 $stmt->bind_param("ii", $id, $_SESSION['usuarioID']);
 $stmt->execute();
@@ -35,7 +35,7 @@ if (!$tarea) {
     exit;
 }
 
-// Actualizar tarea si se envía el formulario
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt = $mysqli->prepare("UPDATE tareaUsuario 
