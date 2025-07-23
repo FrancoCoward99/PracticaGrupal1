@@ -14,11 +14,32 @@ $mysqli = abrirConexion();
 
 $usuarioID = $_SESSION['usuarioID'];
 
-$sql = "SELECT id, tarea, descripcion, urlImagen FROM tareaUsuario WHERE usuarioID = ?";
+$sql = "SELECT id, tarea, nombre, descripcion, estadoID, fechaCreacion, fechaActualizacion, urlImagen 
+        FROM tareaUsuario 
+        WHERE usuarioID = ?";
 $stmt = $mysqli->prepare($sql);
 $stmt->bind_param("i", $usuarioID);
 $stmt->execute();
 $result = $stmt->get_result();
+
+function estadoNombre($id) {
+    switch ($id) {
+        case 1: return "Pendiente";
+        case 2: return "En progreso";
+        case 3: return "Completada";
+        default: return "Desconocido";
+    }
+}
+
+function estadoBadge($id) {
+    switch ($id) {
+        case 1: return '<span class="badge bg-secondary">Pendiente</span>';
+        case 2: return '<span class="badge bg-warning text-dark">En progreso</span>';
+        case 3: return '<span class="badge bg-success">Completada</span>';
+        default: return '<span class="badge bg-dark">Desconocido</span>';
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +51,7 @@ $result = $stmt->get_result();
 </head>
 <body class="d-flex flex-column min-vh-100">
     <?php include '../componentes/navbar.php'; ?>
+
     <div class="container mt-5 flex-grow-1">
         <h1 class="mb-4">Mis Tareas</h1>
         <a href="nuevaTarea.php" class="btn btn-success mb-4">Nueva Tarea</a>
@@ -43,7 +65,16 @@ $result = $stmt->get_result();
                         <?php endif; ?>
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($tarea['tarea']) ?></h5>
+                            <p class="fw-bold text-secondary mb-1"><?= htmlspecialchars($tarea['nombre']) ?></p>
                             <p class="card-text"><?= htmlspecialchars($tarea['descripcion']) ?></p>
+                            <p class="text-muted mb-1 fw-bold">Estado: <?= estadoBadge($tarea['estadoID']) ?></p>
+
+                            <p class="text-muted mb-1 fw-bold">
+                                Creado: <?= htmlspecialchars($tarea['fechaCreacion']) ?>
+                            </p>
+                            <p class="text-muted fw-bold">
+                                Actualizado: <?= htmlspecialchars($tarea['fechaActualizacion']) ?>
+                            </p>
                         </div>
                         <div class="card-footer text-end">
                             <a href="editarTarea.php?id=<?= $tarea['id'] ?>" class="btn btn-sm btn-primary">Editar</a>
@@ -55,8 +86,7 @@ $result = $stmt->get_result();
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <?php include '../componentes/footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
