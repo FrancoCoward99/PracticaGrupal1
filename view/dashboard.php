@@ -12,7 +12,7 @@ if (!isset($_SESSION['nombreUsuario']) || !isset($_SESSION['usuarioID'])) {
 require_once '../accesoDatos/accesoDatos.php';
 $mysqli = abrirConexion();
 
-$usuarioID = $_SESSION['usuarioID']; // ← Usamos ID único del usuario
+$usuarioID = $_SESSION['usuarioID'];
 
 $sql = "SELECT tarea, descripcion, urlImagen 
         FROM tareaUsuario 

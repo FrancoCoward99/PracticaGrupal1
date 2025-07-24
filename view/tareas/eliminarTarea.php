@@ -17,7 +17,6 @@ if (!$idTarea) {
 
 $mysqli = abrirConexion();
 
-// Validar que la tarea le pertenece al usuario activo
 $stmt = $mysqli->prepare("SELECT tu.id FROM tareaUsuario tu 
     JOIN usuarios u ON tu.usuarioID = u.id 
     WHERE tu.id = ? AND u.nombreUsuario = ?");
@@ -30,7 +29,6 @@ if ($resultado->num_rows === 0) {
     exit;
 }
 
-// Eliminar
 $delete = $mysqli->prepare("DELETE FROM tareaUsuario WHERE id = ?");
 $delete->bind_param("i", $idTarea);
 $delete->execute();

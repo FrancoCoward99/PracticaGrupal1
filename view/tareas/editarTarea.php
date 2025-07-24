@@ -23,7 +23,6 @@ if (!$id) {
     exit;
 }
 
-// Obtener la tarea actual
 $stmt = $mysqli->prepare("SELECT * FROM tareaUsuario WHERE id = ? AND usuarioID = ?");
 $stmt->bind_param("ii", $id, $_SESSION['usuarioID']);
 $stmt->execute();
@@ -35,7 +34,6 @@ if (!$tarea) {
     exit;
 }
 
-// Actualizar tarea si se envía el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt = $mysqli->prepare("UPDATE tareaUsuario 
@@ -73,10 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Editar Tarea</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <?php include '../componentes/navbar.php'; ?>
 
-<div class="container mt-4">
+<div class="container mt-4 flex-grow-1">
     <h2>Editar Tarea</h2>
 
     <form method="POST">
@@ -113,6 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="listaTareas.php" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
+
+<?php include '../componentes/footer.php'; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
